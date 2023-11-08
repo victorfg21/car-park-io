@@ -1,0 +1,16 @@
+.img {
+    height: auto;
+    width: 400px;
+    flex: content;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+}
+
+input {
+    text-transform: uppercase
+}
+
+ul {
+    list-style-type: none;
+}
