@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import logo from '../../assets/park.png';
-import { Alert, Button, Image, Col, Container, Row, Modal, Form } from 'react-bootstrap';
+import { Alert, Button, Image, Col, Container, Row, Modal, Form, FloatingLabel } from 'react-bootstrap';
 import styles from "./index.module.css";
 import { v4 as uuidv4 } from 'uuid';
-import TimePicker from 'react-time-picker';
-import 'react-time-picker/dist/TimePicker.css';
 import ReactLoading from 'react-loading';
-
-import Carro from "../carro";
+import { IMaskInput } from "react-imask";
+import api from "../../services/api"
+import Estacionamento from "../estacionamento";
 
 export default function Portaria() {
     const [placa, setPlaca] = useState("");
@@ -15,11 +14,18 @@ export default function Portaria() {
     const [loading, setLoading] = useState(true);
     const [abrirModal, setAbrirModal] = useState(false);
     const [abrirAlerta, setAbrirAlerta] = useState(false);
-    const [horaEntrada, setHoraEntrada] = useState('10:00');
+    const [valorInicial, setValorInicial] = useState("");
+    const [valorHora, setValorHora] = useState("");
+    const [horaEntrada, setHoraEntrada] = useState("");
 
     useEffect(() => {
         async function carregarEstacionamento() {
-            const response = await api.get('listar-veiculos');
+            const response = await api.get('listar-veiculos',
+                {
+                    headers: {
+                        "Access-Control-Allow-Origin": "*",
+                    }
+                });
             setCarros(response.data)
             setLoading(false);
         }
@@ -33,65 +39,100 @@ export default function Portaria() {
             return;
         }
         let myuuid = uuidv4();
-        setCarros([...carros, { id: myuuid, placa: placa }]);
+        setCarros([...carros, { id: myuuid, placa, horaEntrada, valorInicial, valorHora }]);
         setPlaca("");
+        setValorInicial("");
+        setValorHora("");
+        setHoraEntrada("");
         setAbrirModal(false);
     }
 
-    const estacionamento = carros.map((carro) =>
-        <Col key={carro.id} sm={4} md={2}>
-            <Carro data={carro.placa} />
-        </Col>
-    );
-    return (
-        <Container>
-            <Row>
-                <Col>
-                    <Image src={logo} rounded className={styles.img} />
-                </Col>
-            </Row>
-            <Row>
-                <Col>
-                    <Button variant="success" onClick={() => setAbrirModal(true)}>
-                        Estacionar
-                    </Button>
-                </Col>
-            </Row>
-            <Row>
-                <Col md={12} className="mt-3">
-                    <h4>Total carros estacionados: {carros.length}</h4>
-                </Col>
-            </Row>
-            <Row>
-                {estacionamento}
-            </Row>
+    const maskMoeda = [
+        {
+            mask: 'R$ num',
+            blocks: {
+                num: {
+                    mask: Number,
+                    max: 99,
+                    thousandsSeparator: '.',
+                    scale: 2,
+                    padFractionalZeros: true,
+                    normalizeZeros: true,
+                }
+            }
+        }
+    ];
 
-            <Modal show={abrirModal} onHide={() => setAbrirModal(false)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Portaria</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Alert show={abrirAlerta} onClose={() => setAbrirAlerta(false)} variant="danger" dismissible>
-                        A Placa não foi preenchida!
-                    </Alert>
-                    <Form>
-                        <Form.Group className="mb-3" controlId="carro.Placa">
-                            <Form.Label>Placa do Carro</Form.Label>
-                            <Form.Control type="text" placeholder="FBR2A23" maxLength={7} onChange={e => setPlaca(e.target.value)} />
-                        </Form.Group>
-                        <Form.Label className="mb-12">Horário Entrada</Form.Label>
-                        <br />
-                        <TimePicker className="mb-3" onChange={setHoraEntrada} value={horaEntrada} disableClock={true} locale="pt-BR" amPmAriaLabel="sdsds" />                    </Form>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setAbrirModal(false)}>
-                        Cancelar
-                    </Button>
-                    <Button variant="primary" onClick={entrarCarro}>
-                        Confirmar
-                    </Button>
-                </Modal.Footer>
-            </Modal>
-        </Container>
-    );
+    if (loading) return (<ReactLoading type="spinningBubbles" color="#000" height={30} width={100} />)
+    else
+        return (
+            <Container>
+                <Row>
+                    <Col>
+                        <Image src={logo} rounded className={styles.img} />
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <Button variant="success" onClick={() => setAbrirModal(true)}>
+                            Estacionar
+                        </Button>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col md={12} className="mt-3">
+                        <h4>Total carros estacionados: {carros.length}</h4>
+                    </Col>
+                </Row>
+                <Row>
+                    <Estacionamento carros={carros} />
+                </Row>
+
+                <Modal show={abrirModal} onHide={() => setAbrirModal(false)}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Portaria</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Alert show={abrirAlerta} onClose={() => setAbrirAlerta(false)} variant="danger" dismissible>
+                            A Placa não foi preenchida!
+                        </Alert>
+                        <Form>
+                            <FloatingLabel controlId="floatingPlaca" label="Placa do Carro" className="mt-1">
+                                <Form.Control
+                                    type="text"
+                                    placeholder="FBR2A23"
+                                    maxLength={7}
+                                    onChange={e => setPlaca(e.target.value.toString().toUpperCase())}
+                                    className="text-uppercase" />
+                            </FloatingLabel>
+                            <FloatingLabel controlId="floatingValorInicial" label="Valor Inicial" className="mt-3">
+                                <Form.Control
+                                    type="text"
+                                    as={IMaskInput}
+                                    mask={maskMoeda}
+                                    onAccept={valor => setValorInicial(valor)} />
+                            </FloatingLabel>
+                            <FloatingLabel controlId="floatingValorHora" label="Valor P/Hora" className="mt-3">
+                                <Form.Control
+                                    type="text"
+                                    as={IMaskInput}
+                                    mask={maskMoeda}
+                                    onChange={valor => setValorHora(valor)} />
+                            </FloatingLabel>
+                            <FloatingLabel controlId="floatingValorEntrada" label="Horário Entrada" className="mt-3">
+                                <Form.Control type="time" onChange={e => setHoraEntrada(e.target.value)} />
+                            </FloatingLabel>
+                        </Form>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={() => setAbrirModal(false)}>
+                            Cancelar
+                        </Button>
+                        <Button variant="primary" onClick={entrarCarro}>
+                            Confirmar
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+            </Container>
+        );
 }

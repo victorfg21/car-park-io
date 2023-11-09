@@ -6,7 +6,43 @@
 
 .placa {
     position: absolute;
+    top: 50%;
+    left: 0%;
+    font-size: 15px;
+    background-color: black;
+    color: whitesmoke;
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+}
+
+.horaEntrada {
+    position: absolute;
     top: 40%;
+    left: 0%;
+    font-size: 15px;
+    background-color: black;
+    color: whitesmoke;
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+}
+
+.valorInicial {
+    position: absolute;
+    top: 30%;
+    left: 0%;
+    font-size: 15px;
+    background-color: black;
+    color: whitesmoke;
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+}
+
+.valorHora {
+    position: absolute;
+    top: 20%;
     left: 0%;
     font-size: 15px;
     background-color: black;
