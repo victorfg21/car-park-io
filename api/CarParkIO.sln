@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarParkIO.Api", "CarParkIO\CarParkIO.Api\CarParkIO.Api.csproj", "{EFC4BCC1-1D8E-4E94-89CD-7ACD55F5B157}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{808D99CF-185E-4A46-BB01-1B86C4C96AA7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{9558FD41-6EB1-4F23-AA00-8E091E7AFBD3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EFC4BCC1-1D8E-4E94-89CD-7ACD55F5B157}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFC4BCC1-1D8E-4E94-89CD-7ACD55F5B157}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFC4BCC1-1D8E-4E94-89CD-7ACD55F5B157}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFC4BCC1-1D8E-4E94-89CD-7ACD55F5B157}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{EFC4BCC1-1D8E-4E94-89CD-7ACD55F5B157} = {808D99CF-185E-4A46-BB01-1B86C4C96AA7}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {551A4448-2E24-4B16-8006-F8EEDDD808A8}
+	EndGlobalSection
+EndGlobal
